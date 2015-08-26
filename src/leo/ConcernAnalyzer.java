@@ -39,6 +39,7 @@ public class ConcernAnalyzer {
 		default:
 			System.out.println("command not found!");
 		}
+		System.out.println("done! (๑•ᴗ•๑)♡‼");
 	}
 
 	public static JSONObject getJsonFromCsv(final String csvFile){

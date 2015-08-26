@@ -17,12 +17,13 @@ import org.json.simple.JSONObject;
 
 public class ConcernCounter {
 
-	private static final String rootPath = "/Users/felicitia/Google_Drive/Design_Code/MobileMedia/";
+	private static final String rootPath = "/Users/felicitia/Google_Drive/Design_Code/Inventario/";
 	private static final String codeSmellFile = rootPath + "codeAnomalies.csv";
 	private static final String archSmellFile = rootPath
-			+ "archtecturalProblemsMM.csv";
-	private static final String concernCsvFile = rootPath + "agglomeration.csv";
-	private static final String outputFolder = "/Users/felicitia/Google_Drive/Design_Code/yixue_results/MobileMedia/";
+			+ "architecturalProblemsInventario.csv";
+	private static final String concernCsvFile = rootPath
+			+ "agglomerations.csv";
+	private static final String outputFolder = "/Users/felicitia/Google_Drive/Design_Code/yixue_results/Inventario/";
 	private static final String codeSmellOutput = outputFolder
 			+ "code_smell.csv";
 	private static final String archSmellOutput = outputFolder
@@ -75,9 +76,10 @@ public class ConcernCounter {
 				}
 				numPerConcern += numPerClass;
 			}
-			writer.println(key + SEMI + classes.size() + SEMI + numPerConcern + SEMI
-					+ relatedClass.size() + SEMI + notRelatedClass.size()
-					+ SEMI + relatedClass.toJSONString() + SEMI
+			writer.println(key + SEMI + classes.size() + SEMI + numPerConcern
+					+ SEMI + relatedClass.size() + SEMI
+					+ notRelatedClass.size() + SEMI
+					+ relatedClass.toJSONString() + SEMI
 					+ notRelatedClass.toJSONString());
 		}
 		writer.close();
@@ -97,7 +99,8 @@ public class ConcernCounter {
 
 	public static void countCodeSmell(final String outputFile) {
 		HashMap<String, HashSet<String>> classSmellResult = (HashMap<String, HashSet<String>>) getCodeSmells();
-		String[] header = { "concern#", "#code_smells" };
+		String[] header = { "concern#", "#classes", "#code_smells", "#realted",
+				"#not_related", "related_classes", "not_related_classes" };
 		JSONObject concerns = ConcernAnalyzer.getJsonFromCsv(concernCsvFile);
 		PrintWriter writer = null;
 		try {
@@ -106,20 +109,32 @@ public class ConcernCounter {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		setCsvHeader(writer, COMMA, header);
+		setCsvHeader(writer, SEMI, header);
 		for (Iterator iterator = concerns.keySet().iterator(); iterator
 				.hasNext();) {
 			String key = (String) iterator.next();
 			JSONObject concern = (JSONObject) concerns.get(key);
 			JSONArray classes = (JSONArray) concern.get("classes");
+			JSONArray relatedClass = new JSONArray();
+			JSONArray notRelatedClass = new JSONArray();
 			int num = 0;
 			for (int i = 0; i < classes.size(); i++) {
 				String className = classes.get(i).toString().trim();
 				if (classSmellResult.containsKey(className)) {
 					num += classSmellResult.get(className).size();
+					if (0 == classSmellResult.get(className).size()) {
+						notRelatedClass.add(className);
+					} else {
+						relatedClass.add(className);
+					}
+				} else {
+					notRelatedClass.add(className);
 				}
 			}
-			writer.println(key + COMMA + num);
+			writer.println(key + SEMI + classes.size() + SEMI + num + SEMI
+					+ relatedClass.size() + SEMI + notRelatedClass.size()
+					+ SEMI + relatedClass.toJSONString() + SEMI
+					+ notRelatedClass.toJSONString());
 		}
 		writer.close();
 		System.out.println("code smell done! ╭( ･ㅂ･)و ");
@@ -296,8 +311,16 @@ public class ConcernCounter {
 			className.append(splitNames[splitNames.length - 2]);
 			return className.toString().trim();
 		} else {
-			System.out.println("first char is not alphabet");
-			return null;
+			StringBuilder tmp = new StringBuilder();
+			for (int i = 0; i < splitNames.length - 2; i++) {
+				tmp.append(splitNames[i]);
+				tmp.append('.');
+			}
+			tmp.append(splitNames[splitNames.length - 2]);
+			System.out.println("first char is not alphabet: "
+					+ splitNames[splitNames.length - 1] + ", then deal with: "
+					+ tmp.toString().trim());
+			return getClassName(tmp.toString().trim());
 		}
 	}
 }
