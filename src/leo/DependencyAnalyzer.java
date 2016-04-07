@@ -21,7 +21,7 @@ import com.sun.javafx.tk.FocusCause;
 public class DependencyAnalyzer {
 
 	private static final String SEPARATOR = ";";
-	private static final String rootPath = "/Users/felicitia/Google_Drive/Design_Code/yixue_results/Primex/";
+	private static final String rootPath = "/Users/felicitia/Google_Drive/Design_Code/yixue_results/OODT/";
 	private static final String depFile = rootPath+"class_dep.xml";
 	private static final String concernFile = rootPath+"new_concerns.json";
 	private static final String outputFile = rootPath+"syntactic_dep.csv";

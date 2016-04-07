@@ -17,24 +17,26 @@ import org.json.simple.JSONObject;
 
 public class ConcernCounter {
 
-	private static final String rootPath = "/Users/felicitia/Google_Drive/Design_Code/Inventario/";
+	private static final String rootPath = "/Users/felicitia/Google_Drive/Design_Code/OODT/";
 	private static final String codeSmellFile = rootPath + "codeAnomalies.csv";
 	private static final String archSmellFile = rootPath
-			+ "architecturalProblemsInventario.csv";
+			+ "archtecturalProblemsOODT_copy.csv";
 	private static final String concernCsvFile = rootPath
-			+ "agglomerations.csv";
-	private static final String outputFolder = "/Users/felicitia/Google_Drive/Design_Code/yixue_results/Inventario/";
+			+ "agglomeration.csv";
+	private static final String outputFolder = "/Users/felicitia/Google_Drive/Design_Code/yixue_results/OODT/";
 	private static final String codeSmellOutput = outputFolder
 			+ "code_smell.csv";
 	private static final String archSmellOutput = outputFolder
 			+ "arch_smell.csv";
-	private static final String COMMA = ",";
 	private static final String SEMI = ";";
+	private static final String COMMA = ",";
+	private static final String ARCH_SEP = SEMI;
+	private static final String CODE_SEP = COMMA;
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		// countCodeSmell(codeSmellOutput);
-		countArchSmell(archSmellOutput);
+		 countCodeSmell(codeSmellOutput);
+//		countArchSmell(archSmellOutput);
 	}
 
 	public static void countArchSmell(final String outputFile) {
