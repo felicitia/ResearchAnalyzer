@@ -1,5 +1,6 @@
 package util;
 
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,6 +47,12 @@ public class StringUtil {
 			}
 		}
 		return false;
+	}
+	
+	public static void printStringSet(Set<String> strs) {
+		for (String str : strs) {
+			System.out.println(str);
+		}
 	}
 	
 	/**

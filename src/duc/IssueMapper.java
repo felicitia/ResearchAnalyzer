@@ -35,9 +35,9 @@ public class IssueMapper {
 		// inputSmellFile = consoleScanner.next();
 		// System.out.println("output file (full path with extension):");
 		// outputFile = consoleScanner.next();
-		issues = (JSONArray) readJsonFromFile(inputIssueFile);
+		issues = (JSONArray) JSONUtil.readJsonFromFile(inputIssueFile);
 		// printStringSet(getDirectoryPrefix());
-		smells = (JSONArray) readJsonFromFile(inputSmellFile);
+		smells = (JSONArray) JSONUtil.readJsonFromFile(inputSmellFile);
 		addSmess2All();
 		JSONUtil.writeJSONArray2File(issues, outputFile);
 		System.out.println("done! (๑•ᴗ•๑)♡‼");
@@ -81,7 +81,7 @@ public class IssueMapper {
 	 */
 	public static void addSmell2File(JSONObject issue, JSONObject file,
 			String dir) {
-		String version = (String) issue.get("affect:");
+		String version = (String) issue.get("affect");
 		if (version == null) {
 			return;
 		}
@@ -123,30 +123,6 @@ public class IssueMapper {
 		}
 	}
 
-	/**
-	 * 
-	 * @param filename
-	 *            full file name
-	 * @return
-	 */
-	public static Object readJsonFromFile(String filename) {
-		Object obj = new JSONObject();
-		JSONParser parser = new JSONParser();
-		try {
-			obj = parser.parse(new FileReader(filename));
-			;
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return obj;
-	}
-
-	public static void printStringSet(Set<String> strs) {
-		for (String str : strs) {
-			System.out.println(str);
-		}
-	}
 
 	public static Set<String> getDirectoryPrefix() {
 		Set<String> prefixs = new HashSet<String>();

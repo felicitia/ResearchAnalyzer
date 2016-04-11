@@ -3,6 +3,7 @@ package util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
@@ -14,6 +15,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 public class JSONUtil {
 
@@ -88,5 +90,24 @@ public class JSONUtil {
 		} finally {
 			writer.close();
 		}
+	}
+	
+	/**
+	 * 
+	 * @param filename
+	 *            full file name
+	 * @return
+	 */
+	public static Object readJsonFromFile(String filename) {
+		Object obj = new JSONObject();
+		JSONParser parser = new JSONParser();
+		try {
+			obj = parser.parse(new FileReader(filename));
+			;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return obj;
 	}
 }
