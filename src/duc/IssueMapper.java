@@ -24,8 +24,9 @@ public class IssueMapper {
 		System.out.println("don't forget to update the pkgPrefixs string array for different projects");
 		issues = (JSONArray) JSONUtil.readJsonFromFile(inputIssueFile);
 		smells = (JSONArray) JSONUtil.readJsonFromFile(inputSmellFile);
-		addSmess2All();
-		JSONUtil.writeJSONArray2File(issues, outputFile);
+//		addSmess2All();
+//		JSONUtil.writeJSONArray2File(issues, outputFile);
+		StringUtil.printStringSet(getDirectoryPrefix());
 		System.out.println("done! (๑•ᴗ•๑)♡‼");
 	}
 

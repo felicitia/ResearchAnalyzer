@@ -19,17 +19,11 @@ import org.json.simple.parser.JSONParser;
 
 public class JSONUtil {
 
+	final static String inputFile = "/Users/felicitia/Google_Drive/Arcade/ICSE_2016_data/yixue_arch_result/class_smell/struts2_pkg.xls";
+	final static String outputFile = "/Users/felicitia/Google_Drive/Arcade/ICSE_2016_data/yixue_arch_result/class_smell_json/struts2_pkg.json";
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-
-		Scanner consoleScanner = new Scanner(System.in);
-		String inputFile = null;
-		String outputFile = null;
-		System.out.println("input file (full path with extension):");
-		inputFile = consoleScanner.next();
-		System.out.println("output file (full path with extension):");
-		outputFile = consoleScanner.next();
-		consoleScanner.close();
 		writeJSONArray2File(xls2JSON(inputFile), outputFile);
 	}
 
