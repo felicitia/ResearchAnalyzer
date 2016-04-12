@@ -1,13 +1,11 @@
 package duc;
 
-import java.io.FileReader;
 import java.util.HashSet;
 //import java.util.Scanner;
 import java.util.Set;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
 import util.JSONUtil;
 import util.StringUtil;
@@ -18,25 +16,13 @@ public class IssueMapper {
 	static JSONArray smells = null;
 	static String[] pkgPrefixs = { "src/java/main/org", "src/java/org",
 			"src/core/org" };
-
+	final static String inputIssueFile = "/Users/felicitia/Google_Drive/Arcade/ICSE_2016_data/yixue_arch_result/jira_issue/hadoop.json";
+	final static String inputSmellFile = "/Users/felicitia/Google_Drive/Arcade/ICSE_2016_data/yixue_arch_result/class_smell_json/hadoop_svn_acdc.json";
+	final static String outputFile = "/Users/felicitia/Google_Drive/Arcade/ICSE_2016_data/yixue_arch_result/issue_smells/hadoop_svn_acdc.json";
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		// Scanner consoleScanner = new Scanner(System.in);
-		// String inputIssueFile = "/Users/felicitia/Desktop/sample_issue.json";
-		// String inputSmellFile =
-		// "/Users/felicitia/Google_Drive/Arcade/ICSE_2016_data/yixue_arch_result/class_smell_json/hadoop_svn_pkg.json";
-		// String outputFile = "/Users/felicitia/Desktop/output.json";
-		String inputIssueFile = args[0];
-		String inputSmellFile = args[1];
-		String outputFile = args[2];
-		// System.out.println("input issue file (full path with extension):");
-		// inputIssueFile = consoleScanner.next();
-		// System.out.println("input smell file (full path with extension):");
-		// inputSmellFile = consoleScanner.next();
-		// System.out.println("output file (full path with extension):");
-		// outputFile = consoleScanner.next();
+		System.out.println("don't forget to update the pkgPrefixs string array for different projects");
 		issues = (JSONArray) JSONUtil.readJsonFromFile(inputIssueFile);
-		// printStringSet(getDirectoryPrefix());
 		smells = (JSONArray) JSONUtil.readJsonFromFile(inputSmellFile);
 		addSmess2All();
 		JSONUtil.writeJSONArray2File(issues, outputFile);
@@ -88,7 +74,6 @@ public class IssueMapper {
 		String extractedName = StringUtil.dir2pkg(dir);
 		for (int i = 0; i < smells.size(); i++) {
 			JSONObject smell = (JSONObject) smells.get(i);
-
 			if (version.equals(smell.get("version"))) {
 				JSONArray smellsPerVersion = (JSONArray) smell.get("smells");
 				for (int j = 0; j < smellsPerVersion.size(); j++) {
@@ -103,19 +88,38 @@ public class IssueMapper {
 						JSONObject tmpSmell = null;
 						if (file.containsKey("smells")) {
 							tmpSmell = (JSONObject) file.get("smells");
-							tmpSmell.put("bco", smellPerVersion.get("bco"));
-							tmpSmell.put("bdc", smellPerVersion.get("bdc"));
-							tmpSmell.put("buo", smellPerVersion.get("buo"));
-							tmpSmell.put("spf", smellPerVersion.get("spf"));
+							int tmpSmellNum = Integer.parseInt(smellPerVersion.get("bco").toString());
+							if(tmpSmellNum != 0){
+								tmpSmell.put("Concern_Overload", tmpSmellNum);
+							}
+							//exclude dependency cycle for now
+//							tmpSmell.put("bdc", smellPerVersion.get("bdc"));
+							tmpSmellNum = Integer.parseInt(smellPerVersion.get("buo").toString());
+							if(tmpSmellNum != 0){
+								tmpSmell.put("Link_Overload", tmpSmellNum);
+							}
+							tmpSmellNum = Integer.parseInt(smellPerVersion.get("spf").toString());
+							if(tmpSmellNum != 0){
+								tmpSmell.put("Scattered_Parasitic_Functionality", tmpSmellNum);
+							}
 						} else {
 							tmpSmell = new JSONObject();
-							tmpSmell.put("bco", smellPerVersion.get("bco"));
-							tmpSmell.put("bdc", smellPerVersion.get("bdc"));
-							tmpSmell.put("buo", smellPerVersion.get("buo"));
-							tmpSmell.put("spf", smellPerVersion.get("spf"));
+							int tmpSmellNum = Integer.parseInt(smellPerVersion.get("bco").toString());
+							if(tmpSmellNum != 0){
+								tmpSmell.put("Concern_Overload", tmpSmellNum);
+							}
+							//exclude dependency cycle for now
+//							tmpSmell.put("bdc", smellPerVersion.get("bdc"));
+							tmpSmellNum = Integer.parseInt(smellPerVersion.get("buo").toString());
+							if(tmpSmellNum != 0){
+								tmpSmell.put("Link_Overload", tmpSmellNum);
+							}
+							tmpSmellNum = Integer.parseInt(smellPerVersion.get("spf").toString());
+							if(tmpSmellNum != 0){
+								tmpSmell.put("Scattered_Parasitic_Functionality", tmpSmellNum);
+							}
 							file.put("smells", tmpSmell);
 						}
-
 					}
 				}
 				return;

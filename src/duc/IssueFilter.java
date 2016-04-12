@@ -9,16 +9,17 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import util.JSONUtil;
-import util.StringUtil;
 
 public class IssueFilter {
 
+	final static String classSmells = "/Users/felicitia/Google_Drive/Arcade/ICSE_2016_data/yixue_arch_result/class_smell_json/hadoop_svn_pkg.json";
+	final static String inputFile = "/Users/felicitia/Google_Drive/Arcade/ICSE_2016_data/ASE_2016/Hadoop/all_smells/hadoop_pkg_all.json";
+	final static String ouputFile = "/Users/felicitia/Google_Drive/Arcade/ICSE_2016_data/ASE_2016/Hadoop/all_smells/hadoop_pkg_all_filter_versions.json";
 	static Set<String> versions;
-	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		versions = getVersions(args[0]);
-		filterIssues(args[1], args[2]);
+		versions = getVersions(classSmells);
+		filterIssues(inputFile, ouputFile);
 		System.out.println("done! (๑•ᴗ•๑)♡‼");
 	}
 
@@ -26,21 +27,17 @@ public class IssueFilter {
 	 * filter the issues
 	 * only output the issues whose affected version have smells
 	 * remove dependency cycles
-	 * add total smell numbers
+	 * add total smell numbers for each file
 	 * @param inputIssues
 	 * @param outputIssues
 	 */
 	public static void filterIssues(final String inputIssues, final String outputIssues){
 		JSONArray issues = (JSONArray) JSONUtil.readJsonFromFile(inputIssues);
-		System.out.println("size="+issues.size());
 		for(int i=0; i<issues.size(); i++){
-			System.out.println("i="+i);
 			JSONObject issue = (JSONObject) issues.get(i);
 			String affectVersion = (String) issue.get("affect");
 			String issueID = (String) issue.get("issue_id");
-			System.out.println("affect version = " + affectVersion);
 			if(!versions.contains(affectVersion)){
-				System.out.println("cut this version: " + affectVersion);
 				issues.remove(i);
 				//remove one issue, the index should be reduced by 1!!!
 				i--;
