@@ -7,6 +7,7 @@ import java.util.Set;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import util.Config;
 import util.Constant;
 import util.JSONUtil;
 import util.StringUtil;
@@ -16,72 +17,29 @@ public class IssueSmellMapper {
 	static JSONArray issues = null;
 	static JSONArray smells = null;
 
+	static Config globalConfig = new Config("config/global.properties");
+	static String projectName = null;
+	static Config projectConfig = null;
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		if (Constant.PROJECT == Constant.HADOOP) {
+		projectName = globalConfig.getValue("project");
+		projectConfig = new Config("config/" + projectName + ".properties");
+		
 			issues = (JSONArray) JSONUtil
-					.readJsonFromFile(Constant.HADOOP_ISSUE_FILE);
+					.readJsonFromFile(projectConfig.getValue("ISSUE_FILE"));
 			smells = (JSONArray) JSONUtil
-					.readJsonFromFile(Constant.HADOOP_SMELL_PKG);
+					.readJsonFromFile(projectConfig.getValue("SMELL_PKG"));
 			addSmess2All();
-			JSONUtil.writeJSONArray2File(issues, Constant.HADOOP_DEP_CON_PKG);
+			JSONUtil.writeJSONArray2File(issues, projectConfig.getValue("DEP_CON_PKG"));
 			smells = (JSONArray) JSONUtil
-					.readJsonFromFile(Constant.HADOOP_SMELL_ARC);
+					.readJsonFromFile(projectConfig.getValue("SMELL_ARC"));
 			addSmess2All();
-			JSONUtil.writeJSONArray2File(issues, Constant.HADOOP_DEP_CON_ARC);
+			JSONUtil.writeJSONArray2File(issues, projectConfig.getValue("DEP_CON_ARC"));
 			smells = (JSONArray) JSONUtil
-					.readJsonFromFile(Constant.HADOOP_SMELL_ACDC);
+					.readJsonFromFile(projectConfig.getValue("SMELL_ACDC"));
 			addSmess2All();
-			JSONUtil.writeJSONArray2File(issues, Constant.HADOOP_DEP_CON_ACDC);
-		} else if (Constant.PROJECT == Constant.IVY) {
-			issues = (JSONArray) JSONUtil
-					.readJsonFromFile(Constant.IVY_ISSUE_FILE);
-			smells = (JSONArray) JSONUtil
-					.readJsonFromFile(Constant.IVY_SMELL_PKG);
-			addSmess2All();
-			JSONUtil.writeJSONArray2File(issues, Constant.IVY_DEP_CON_PKG);
-			smells = (JSONArray) JSONUtil
-					.readJsonFromFile(Constant.IVY_SMELL_ARC);
-			addSmess2All();
-			JSONUtil.writeJSONArray2File(issues, Constant.IVY_DEP_CON_ARC);
-			smells = (JSONArray) JSONUtil
-					.readJsonFromFile(Constant.IVY_SMELL_ACDC);
-			addSmess2All();
-			JSONUtil.writeJSONArray2File(issues, Constant.IVY_DEP_CON_ACDC);
-		} else if (Constant.PROJECT == Constant.LUCENE) {
-			issues = (JSONArray) JSONUtil
-					.readJsonFromFile(Constant.LUCENE_ISSUE_FILE);
-			smells = (JSONArray) JSONUtil
-					.readJsonFromFile(Constant.LUCENE_SMELL_PKG);
-			addSmess2All();
-			JSONUtil.writeJSONArray2File(issues, Constant.LUCENE_DEP_CON_PKG);
-			smells = (JSONArray) JSONUtil
-					.readJsonFromFile(Constant.LUCENE_SMELL_ARC);
-			addSmess2All();
-			JSONUtil.writeJSONArray2File(issues, Constant.LUCENE_DEP_CON_ARC);
-			smells = (JSONArray) JSONUtil
-					.readJsonFromFile(Constant.LUCENE_SMELL_ACDC);
-			addSmess2All();
-			JSONUtil.writeJSONArray2File(issues, Constant.LUCENE_DEP_CON_ACDC);
-		} else if (Constant.PROJECT == Constant.STRUTS2) {
-			issues = (JSONArray) JSONUtil
-					.readJsonFromFile(Constant.STRUTS2_ISSUE_FILE);
-			smells = (JSONArray) JSONUtil
-					.readJsonFromFile(Constant.STRUTS2_SMELL_PKG);
-			addSmess2All();
-			JSONUtil.writeJSONArray2File(issues, Constant.STRUTS2_DEP_CON_PKG);
-			smells = (JSONArray) JSONUtil
-					.readJsonFromFile(Constant.STRUTS2_SMELL_ARC);
-			addSmess2All();
-			JSONUtil.writeJSONArray2File(issues, Constant.STRUTS2_DEP_CON_ARC);
-			smells = (JSONArray) JSONUtil
-					.readJsonFromFile(Constant.STRUTS2_SMELL_ACDC);
-			addSmess2All();
-			JSONUtil.writeJSONArray2File(issues, Constant.STRUTS2_DEP_CON_ACDC);
-		} else {
-			System.out.println("Project invalid..");
-		}
-
+			JSONUtil.writeJSONArray2File(issues, projectConfig.getValue("DEP_CON_ACDC"));
 		// StringUtil.printStringSet(getDirectoryPrefix());
 		System.out.println("done! (๑•ᴗ•๑)♡‼");
 	}
@@ -103,31 +61,11 @@ public class IssueSmellMapper {
 			for (int fileIdx = 0; fileIdx < files.size(); fileIdx++) {
 				JSONObject file = (JSONObject) files.get(fileIdx);
 				String filename = (String) file.get("filename");
-				switch (Constant.PROJECT) {
-				case Constant.HADOOP:
+				String[] pkgPrefixs = projectConfig.getValue("PKG_PREFIX").split("#");
 					if (StringUtil.isValidFilename(filename,
-							Constant.HADOOP_PKG_PREFIX)) {
+							pkgPrefixs)) {
 						addSmell2File(issue, file, filename);
 					}
-					break;
-				case Constant.STRUTS2:
-					if (StringUtil.isValidFilename(filename,
-							Constant.STRUTS2_PKG_PREFIX)) {
-						addSmell2File(issue, file, filename);
-					}
-					break;
-				case Constant.IVY:
-					if (StringUtil.isValidFilename(filename,
-							Constant.IVY_PKG_PREFIX)) {
-						addSmell2File(issue, file, filename);
-					}
-					break;
-				case Constant.LUCENE:
-					if (StringUtil.isValidFilename(filename,
-							Constant.LUCENE_PKG_PREFIX)) {
-						addSmell2File(issue, file, filename);
-					}
-				}
 			}
 		}
 	}
